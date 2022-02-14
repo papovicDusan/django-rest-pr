@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
+from rest_framework.renderers import TemplateHTMLRenderer
 
 class UsersView(generics.ListAPIView):
     serializer_class = UserSerializer
@@ -25,13 +26,23 @@ class UserAuthView(APIView):
         else:
             raise ValidationError("You are not authenticated!")
         
+# class UserSetView(mixins.RetrieveModelMixin,generics.GenericAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAuthenticated]
+    
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+
 class UserSetView(mixins.RetrieveModelMixin,generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    renderer_classes=[TemplateHTMLRenderer]
     
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        self.object = self.get_object()
+        return Response({'user': self.object}, template_name='user_detail.html')
     
 # Create your views here.
 class HomeView(APIView):
