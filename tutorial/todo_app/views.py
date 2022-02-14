@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 from todo_app.serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated
 
 class UserAuthView(APIView):
     def get(self,request):
@@ -20,6 +20,7 @@ class UserAuthView(APIView):
 class UserSetView(mixins.RetrieveModelMixin,generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
     
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
