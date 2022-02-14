@@ -1,8 +1,9 @@
 from django.urls import path, include
-from todo_app.views import UserSetView, UserAuthView
+from todo_app.views import UserSetView, UserAuthView, UsersView
 from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView)
 
 urlpatterns = [
+     path('users/', UsersView.as_view(), name='user-list'),
     path('users/<int:pk>/', UserSetView.as_view(), name='user-detail'),
     path('api/users/me/', UserAuthView.as_view(), name='user-me'),
      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

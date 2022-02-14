@@ -8,6 +8,14 @@ from todo_app.serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+
+class UsersView(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        name = self.request.query_params.get('name', None)
+        return User.objects.filter(Q(first_name__contains = name) | Q(last_name__contains = name))
 
 class UserAuthView(APIView):
     def get(self,request):
